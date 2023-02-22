@@ -1,5 +1,7 @@
 package servlet;
 
+import service.Service;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -7,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 
 @WebServlet("/home")
 public class HomeServlets extends HttpServlet {
@@ -20,8 +23,16 @@ public class HomeServlets extends HttpServlet {
     }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String id = "1";
-        req.setAttribute("id", id);
-        getServletContext().getRequestDispatcher("/jsp/home.jsp").forward(req,resp);
+        String username = req.getParameter("username");
+        String password = req.getParameter("password");
+        String id = Service.getInstance().getId(username,password);
+        if (id.isEmpty()){
+            getServletContext().getRequestDispatcher("/index.html").forward(req,resp);
+        }
+        else{
+            req.setAttribute("id", id);
+            getServletContext().getRequestDispatcher("/jsp/home.jsp").forward(req,resp);
+        }
+
     }
 }
