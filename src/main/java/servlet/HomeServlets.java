@@ -1,5 +1,6 @@
 package servlet;
 
+import model.PostInstagram;
 import service.Service;
 
 import javax.servlet.ServletException;
@@ -9,7 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Array;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 @WebServlet("/home")
 public class HomeServlets extends HttpServlet {
@@ -19,7 +22,8 @@ public class HomeServlets extends HttpServlet {
     }
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        getServletContext().getRequestDispatcher("/index.html").forward(req, resp);
+        req.setAttribute("error","");
+        getServletContext().getRequestDispatcher("/index.jsp").forward(req, resp);
     }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -27,9 +31,12 @@ public class HomeServlets extends HttpServlet {
         String password = req.getParameter("password");
         String id = Service.getInstance().getId(username,password);
         if (id.isEmpty()){
-            getServletContext().getRequestDispatcher("/index.html").forward(req,resp);
+            req.setAttribute("error","error en el inicio de sesion");
+            getServletContext().getRequestDispatcher("/index.jsp").forward(req,resp);
         }
         else{
+            ArrayList<PostInstagram> array = Service.getInstance().getPosts();
+            req.setAttribute("posts",array);
             req.setAttribute("id", id);
             getServletContext().getRequestDispatcher("/jsp/home.jsp").forward(req,resp);
         }
