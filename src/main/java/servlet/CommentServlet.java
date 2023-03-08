@@ -33,28 +33,44 @@ public class CommentServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String title = req.getParameter("titol");
-        String comment = req.getParameter("missatge");
-        Part filePart = req.getPart("image");
-        InputStream inputStream = filePart.getInputStream();
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        byte[] buffer = new byte[4096];
-        int bytesRead = -1;
-        while ((bytesRead = inputStream.read(buffer)) != -1) {
-            outputStream.write(buffer, 0, bytesRead);
-        }
-        byte[] imageBytes = outputStream.toByteArray();
+
         String id = req.getParameter("id");
         if(id.isEmpty()){
             req.setAttribute("error","");
             getServletContext().getRequestDispatcher("/index.jsp").forward(req,resp);
         }
         else{
-            req.setAttribute("id", id);
-            Service.getInstance().setPost(id,imageBytes,title,comment);
-            ArrayList<PostInstagram> array = Service.getInstance().getPosts();
-            req.setAttribute("posts",array);
-            getServletContext().getRequestDispatcher("/jsp/home.jsp").forward(req,resp);
+            String accion = req.getParameter("accion");
+            switch(accion){
+                case "1":
+                    String id_post2 = req.getParameter("post");
+                    Service.getInstance().deletePost(id_post2);
+                    break;
+                case "2":
+                    String id_post = req.getParameter("post");
+                    Service.getInstance().likePost(id_post);
+                    break;
+                case "3":
+                    String title = req.getParameter("titol");
+                    String comment = req.getParameter("missatge");
+                    Part filePart = req.getPart("image");
+                    InputStream inputStream = filePart.getInputStream();
+                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                    byte[] buffer = new byte[4096];
+                    int bytesRead = -1;
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        outputStream.write(buffer, 0, bytesRead);
+                    }
+                    byte[] imageBytes = outputStream.toByteArray();
+                    Service.getInstance().setPost(id,imageBytes,title,comment);
+                    break;
+            }
         }
+        ArrayList<PostInstagram> array = Service.getInstance().getPosts();
+        req.setAttribute("posts",array);
+        req.setAttribute("id",id);
+        getServletContext().getRequestDispatcher("/jsp/home.jsp").forward(req,resp);
+
+
     }
 }

@@ -31,6 +31,7 @@
             <div class= "col">
                 <!-- guardo como hidden el id del usuario -->
                 <input hidden class="form-control" type="text" name="id" value="<%=id%>">
+                <input hidden class="form-control" type="text" name="accion" value="3">
                 <input class="form-control" type="text" name="titol" placeholder="Titulo del post">
                 <br/>
                 <input class="form-control" type="text" name="missatge" placeholder="Redacta el mensaje...">
@@ -46,9 +47,10 @@
         <div class="col p-3 mb-3 bg-black text-white container">
         <%if (id.equals(datos.get(i).getId_usuari()+"")) {%>
                         <div class="row clearfix">
-                             <form action="delete" method="post">
+                             <form action="comment" method="post">
                                     <input hidden class="form-control" type="text" name="id" value="<%=id%>">
                                     <input hidden class="form-control" type="text" name="post" value="<%=datos.get(i).getId()%>">
+                                    <input hidden class="form-control" type="text" name="accion" value="1">
                                     <button type="submit" class="btn btn-link pull-right">
                                         <span id="boot-icon" class="bi bi-trash" style="font-size: 20px;"></span>
                                     </button>
@@ -62,7 +64,7 @@
                                 <p class="text-center col"><%=datos.get(i).getTitle()%></p>
                           </div>
                 <div class = "text-center col">
-                    <img class="cover center" src="data:image/png;base64,<%=datos.get(i).getImageString()%>"  height="400">
+                    <img class="cover center" src="data:image/png;base64,<%=datos.get(i).getImageString()%>"  height="400" width="500">
                 </div>
                 <div class = "row p-3 mb-3 text-white container text-center">
                     <p class="text-center col"><%=datos.get(i).getMessage()%></p>
@@ -73,12 +75,19 @@
                     <a href="mailto:<%=datos.get(i).getUsuari().getEmail()%>">
                         <span id="boot-icon" class="bi bi-envelope" style="font-size: 30px;"></span>
                     </a>
+                    <a href="https://www.github.com/<%=datos.get(i).getUsuari().getGitlab()%>">
+                        <span id="boot-icon" class="bi bi-github" style="font-size: 30px;"></span>
+                    </a>
+                    <a href="https://www.linkedin.com/in/<%=datos.get(i).getUsuari().getLinkedin()%>">
+                        <span id="boot-icon" class="bi bi-linkedin" style="font-size: 30px;"></span>
+                    </a>
                     </div>
                     <div class="col text-white" style="width: 100px; height: 50px;">
                             <p class = "pull-right text-center"><%=datos.get(i).getLikes()%></p>
-                            <form action="like" method="post" class="pull-right">
+                            <form action="comment" method="post" class="pull-right">
                                 <input hidden class="form-control" type="text" name="id" value="<%=id%>">
                                 <input hidden class="form-control" type="text" name="post" value="<%=datos.get(i).getId()%>">
+                                <input hidden class="form-control" type="text" name="accion" value="2">
                                 <button type="submit" class="btn btn-link">
                                    <span id="boot-icon" class="bi bi-heart-fill" style="font-size: 20px;"></span>
                                 </button>
